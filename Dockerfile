@@ -12,6 +12,10 @@ RUN set -e \
         | xargs expr 1 + \
         | xargs -I {} sed -ie '{}i \\tautoindex on;' /etc/nginx/sites-available/default
 
+RUN set -e \
+      && ln -sf /dev/stdout /var/log/nginx/access.log \
+      && ln -sf /dev/stderr /var/log/nginx/error.log
+
 EXPOSE 80
 
 CMD ["/usr/sbin/nginx", "-g", "daemon off;"]
