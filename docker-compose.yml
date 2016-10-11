@@ -1,0 +1,11 @@
+version: '2'
+
+services:
+
+  nginx-autoindex:
+    image: dceoy/nginx-autoindex
+    container_name: nginx-autoindex
+    ports:
+      - "80:80"
+    volumes:
+      - ${HOME}:/var/www/html:ro
