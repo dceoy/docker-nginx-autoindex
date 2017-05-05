@@ -6,7 +6,7 @@ Dockerfile for Nginx with autoindex
 Docker image
 ------------
 
-Pull the image from [Docker Hub](https://hub.docker.com/r/dceoy/nginx/)
+Pull the image from [Docker Hub](https://hub.docker.com/r/dceoy/nginx-autoindex/)
 
 ```sh
 $ docker pull dceoy/nginx-autoindex
