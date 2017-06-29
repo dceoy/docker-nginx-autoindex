@@ -1,10 +1,11 @@
 version: '2'
 
 services:
-
   nginx-autoindex:
-    image: dceoy/nginx-autoindex
     container_name: nginx-autoindex
+    build:
+      context: .
+    image: dceoy/nginx-autoindex:latest
     ports:
       - "80:80"
     volumes:
