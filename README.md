@@ -15,5 +15,5 @@ $ docker pull dceoy/nginx-autoindex
 Run a container and make home directory available at `/` of Nginx
 
 ```sh
-$ docker run -p 80:80 -v ${HOME}:/var/www/html:ro -d dceoy/nginx-autoindex
+$ docker container run --rm -p 80:80 -v ${HOME}:/var/www/html:ro -d dceoy/nginx-autoindex
 ```

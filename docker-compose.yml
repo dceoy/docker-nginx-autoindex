@@ -7,6 +7,6 @@ services:
       context: .
     image: dceoy/nginx-autoindex:latest
     ports:
-      - "80:80"
+      - 80:80
     volumes:
       - ${HOME}:/var/www/html:ro
