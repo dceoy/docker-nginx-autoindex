@@ -9,4 +9,4 @@ services:
     ports:
       - 80:80
     volumes:
-      - ${HOME}:/var/www/html:ro
+      - ${PWD}:/var/www/html:ro
