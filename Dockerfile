@@ -1,9 +1,9 @@
-FROM ubuntu
+FROM ubuntu:latest
 
 RUN set -e \
       && apt-get -y update \
       && apt-get -y upgrade \
-      && apt-get -y install nginx \
+      && apt-get -y install --no-install-recommends --no-install-suggests nginx \
       && apt-get -y autoremove \
       && apt-get clean
 
