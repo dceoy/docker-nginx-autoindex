@@ -1,8 +1,10 @@
 FROM ubuntu:latest
 
+ENV DEBIAN_FRONTEND noninteractive
+
 RUN set -e \
       && apt-get -y update \
-      && apt-get -y upgrade \
+      && apt-get -y dist-upgrade \
       && apt-get -y install --no-install-recommends --no-install-suggests nginx \
       && apt-get -y autoremove \
       && apt-get clean
