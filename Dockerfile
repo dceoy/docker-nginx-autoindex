@@ -7,7 +7,8 @@ RUN set -e \
       && apt-get -y dist-upgrade \
       && apt-get -y install --no-install-recommends --no-install-suggests nginx \
       && apt-get -y autoremove \
-      && apt-get clean
+      && apt-get clean \
+      && rm -rf /var/lib/apt/lists/*
 
 RUN set -e \
       && grep -n -e '^[^#].*location / {$' /etc/nginx/sites-available/default \
