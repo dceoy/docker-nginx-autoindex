@@ -18,7 +18,7 @@ Usage
 Run a web server to serve the current directory at `/` of Nginx
 
 ```sh
-$ docker container run --rm -p 80:80 -v ${PWD}:/var/www/html:ro dceoy/nginx-autoindex
+$ docker container run --rm -p 80:80 -v ${PWD}:/var/lib/nginx/html:ro dceoy/nginx-autoindex
 ```
 
 Run a web server with docker-compose

@@ -1,26 +1,18 @@
-FROM ubuntu:latest
-
-ENV DEBIAN_FRONTEND noninteractive
+FROM alpine:latest
 
 RUN set -e \
-      && ln -sf /bin/bash /bin/sh
+      && apk add --update --no-cache nginx
 
 RUN set -e \
-      && apt-get -y update \
-      && apt-get -y dist-upgrade \
-      && apt-get -y install --no-install-recommends --no-install-suggests \
-        nginx \
-      && apt-get -y autoremove \
-      && apt-get clean \
-      && rm -rf /var/lib/apt/lists/*
+      && grep -n -e $'^[ \t]*location / {$' /etc/nginx/conf.d/default.conf \
+        | cut -d : -f 1 \
+        | xargs -i expr 1 + {} \
+        | xargs -i sed -ie '{} s/return 404;$/autoindex on;/' /etc/nginx/conf.d/default.conf \
+      && sed -ie '/# Everything is a 404/d' /etc/nginx/conf.d/default.conf \
+      && rm -f /etc/nginx/conf.d/default.confe
 
 RUN set -e \
-      && grep -n -e '^[^#].*location / {$' /etc/nginx/sites-available/default \
-        | cut -f 1 -d : \
-        | xargs expr 1 + \
-        | xargs -I {} sed -ie '{}i \\tautoindex on;' /etc/nginx/sites-available/default
-
-RUN set -e \
+      && mkdir /run/nginx \
       && ln -sf /dev/stdout /var/log/nginx/access.log \
       && ln -sf /dev/stderr /var/log/nginx/error.log
 
