@@ -3,7 +3,7 @@ FROM alpine:latest
 RUN set -e \
       && apk add --update --no-cache nginx
 
-RUN set -e \
+RUN set -eo pipefail \
       && grep -n -e $'^[ \t]*location / {$' /etc/nginx/conf.d/default.conf \
         | cut -d : -f 1 \
         | xargs -i expr 1 + {} \
