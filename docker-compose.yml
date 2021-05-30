@@ -11,3 +11,8 @@ services:
       - 80:80
     volumes:
       - ${PWD}:/var/lib/nginx/html:ro
+    entrypoint:
+      - /usr/sbin/nginx
+    command:
+      - -g
+      - daemon off;
