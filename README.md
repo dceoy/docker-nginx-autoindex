@@ -3,6 +3,8 @@ docker-nginx-autoindex
 
 Dockerfile for Nginx with autoindex
 
+[![CI to Docker Hub](https://github.com/dceoy/docker-nginx-autoindex/actions/workflows/docker-publish.yml/badge.svg)](https://github.com/dceoy/docker-nginx-autoindex/actions/workflows/docker-publish.yml)
+
 Docker image
 ------------
 
