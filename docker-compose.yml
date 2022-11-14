@@ -6,6 +6,7 @@ services:
     container_name: nginx-autoindex
     build:
       context: .
+      dockerfile: Dockerfile
     image: dceoy/nginx-autoindex:latest
     ports:
       - 80:80
