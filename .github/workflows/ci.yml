@@ -1,0 +1,62 @@
+---
+name: CI for this repository
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+    types:
+      - opened
+      - synchronize
+      - reopened
+  workflow_dispatch:
+    inputs:
+      workflow:
+        required: true
+        type: choice
+        options:
+          - lint
+          - build
+          - release
+        description: Choose the workflow to run
+        default: lint
+jobs:
+  docker-lint-and-scan:
+    if: >
+      github.event_name == 'push'
+      || github.event_name == 'pull_request'
+      || (github.event_name == 'workflow_dispatch' && inputs.workflow == 'lint')
+    uses: ./.github/workflows/docker-lint-and-scan.yml
+    with:
+      dockerfile-paths: ./src/Dockerfile
+  docker-build-and-push:
+    if: >
+      github.event_name == 'workflow_dispatch' && inputs.workflow == 'build'
+    uses: ./.github/workflows/docker-build-and-push.yml
+    with:
+      registry: docker.io
+      image-name: ${{ github.repository }}
+      platforms: linux/amd64
+      context: .
+      file: ./Dockerfile
+      push: true
+      image-artifact-name: docker-image
+    secrets:
+      DOCKER_USER: ${{ github.actor }}
+      DOCKER_TOKEN: ${{ secrets.DOCKER_TOKEN }}
+  github-release:
+    if: >
+      github.event_name == 'workflow_dispatch' && inputs.workflow == 'release'
+    uses: ./.github/workflows/github-release.yml
+    with:
+      create-new-tag: false
+  dependabot-auto-merge:
+    if: >
+      github.event_name == 'pull_request' && github.actor == 'dependabot[bot]'
+    needs:
+      - docker-lint-and-scan
+    uses: ./.github/workflows/dependabot-auto-merge.yml
+    with:
+      unconditional: true
