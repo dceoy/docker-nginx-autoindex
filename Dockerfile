@@ -11,10 +11,12 @@ RUN \
     addgroup -S -g "${GID}" nginx \
     && adduser -S -H -h /nonexistent -g 'nginx user' -s /bin/false -G nginx -u "${UID}" -D nginx
 
+# hadolint ignore=DL3018
 RUN \
       --mount=type=cache,target=/var/cache/apk,sharing=locked \
       apk add --update --no-cache curl nginx
 
+# hadolint ignore=SC3003
 RUN \
       grep -n -e $'^[ \t]*location / {$' /etc/nginx/http.d/default.conf \
         | cut -d : -f 1 \

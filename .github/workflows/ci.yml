@@ -11,6 +11,7 @@ on:
       - opened
       - synchronize
       - reopened
+      - ready_for_review
   workflow_dispatch:
     inputs:
       workflow:
@@ -19,22 +20,21 @@ on:
         options:
           - lint
           - build
-          - release
         description: Choose the workflow to run
         default: lint
 jobs:
   docker-lint-and-scan:
     if: >
       github.event_name == 'push'
-      || github.event_name == 'pull_request'
+      || (github.event_name == 'pull_request' && github.event.action != 'ready_for_review')
       || (github.event_name == 'workflow_dispatch' && inputs.workflow == 'lint')
-    uses: ./.github/workflows/docker-lint-and-scan.yml
+    uses: dceoy/gh-actions-for-devops/.github/workflows/docker-lint-and-scan.yml@main
     with:
-      dockerfile-paths: ./src/Dockerfile
+      dockerfile-paths: ./Dockerfile
   docker-build-and-push:
     if: >
       github.event_name == 'workflow_dispatch' && inputs.workflow == 'build'
-    uses: ./.github/workflows/docker-build-and-push.yml
+    uses: dceoy/gh-actions-for-devops/.github/workflows/docker-build-and-push.yml@main
     with:
       registry: docker.io
       image-name: ${{ github.repository }}
@@ -46,23 +46,19 @@ jobs:
     secrets:
       DOCKER_USER: ${{ github.actor }}
       DOCKER_TOKEN: ${{ secrets.DOCKER_TOKEN }}
-  github-release:
-    if: >
-      github.event_name == 'workflow_dispatch' && inputs.workflow == 'release'
-    uses: ./.github/workflows/github-release.yml
-    with:
-      create-new-tag: false
   dependabot-auto-merge:
     if: >
       github.event_name == 'pull_request' && github.actor == 'dependabot[bot]'
     needs:
       - docker-lint-and-scan
-    uses: ./.github/workflows/dependabot-auto-merge.yml
+    uses: dceoy/gh-actions-for-devops/.github/workflows/dependabot-auto-merge.yml@main
     with:
-      unconditional: true
+      unconditional: false
   pr-agent:
     if: >
-      github.event_name == 'pull_request' && github.actor != 'dependabot[bot]'
-    needs:
-      - docker-lint-and-scan
-    uses: ./.github/workflows/pr-agent.yml
+      github.event_name == 'pull_request'
+      && github.actor != 'dependabot[bot]'
+      && github.event.action != 'synchronize'
+    uses: dceoy/gh-actions-for-devops/.github/workflows/pr-agent.yml@main
+    secrets:
+      GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
