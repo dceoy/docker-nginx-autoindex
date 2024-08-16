@@ -1,6 +1,4 @@
 ---
-version: '3'
-
 services:
   nginx-autoindex:
     container_name: nginx-autoindex
@@ -8,6 +6,7 @@ services:
       context: .
       dockerfile: Dockerfile
     image: dceoy/nginx-autoindex:latest
+    network_mode: bridge
     ports:
       - 80:80
     volumes:

@@ -1,0 +1,64 @@
+---
+name: CI for this repository
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+    types:
+      - opened
+      - synchronize
+      - reopened
+      - ready_for_review
+  workflow_dispatch:
+    inputs:
+      workflow:
+        required: true
+        type: choice
+        options:
+          - lint
+          - build
+        description: Choose the workflow to run
+        default: lint
+jobs:
+  docker-lint-and-scan:
+    if: >
+      github.event_name == 'push'
+      || (github.event_name == 'pull_request' && github.event.action != 'ready_for_review')
+      || (github.event_name == 'workflow_dispatch' && inputs.workflow == 'lint')
+    uses: dceoy/gh-actions-for-devops/.github/workflows/docker-lint-and-scan.yml@main
+    with:
+      dockerfile-paths: ./Dockerfile
+  docker-build-and-push:
+    if: >
+      github.event_name == 'workflow_dispatch' && inputs.workflow == 'build'
+    uses: dceoy/gh-actions-for-devops/.github/workflows/docker-build-and-push.yml@main
+    with:
+      registry: docker.io
+      image-name: ${{ github.repository }}
+      platforms: linux/amd64
+      context: .
+      file: ./Dockerfile
+      push: true
+      image-artifact-name: docker-image
+    secrets:
+      DOCKER_USER: ${{ github.actor }}
+      DOCKER_TOKEN: ${{ secrets.DOCKER_TOKEN }}
+  dependabot-auto-merge:
+    if: >
+      github.event_name == 'pull_request' && github.actor == 'dependabot[bot]'
+    needs:
+      - docker-lint-and-scan
+    uses: dceoy/gh-actions-for-devops/.github/workflows/dependabot-auto-merge.yml@main
+    with:
+      unconditional: false
+  pr-agent:
+    if: >
+      github.event_name == 'pull_request'
+      && github.actor != 'dependabot[bot]'
+      && github.event.action != 'synchronize'
+    uses: dceoy/gh-actions-for-devops/.github/workflows/pr-agent.yml@main
+    secrets:
+      GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
