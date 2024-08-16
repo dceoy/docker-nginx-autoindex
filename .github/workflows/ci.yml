@@ -60,3 +60,9 @@ jobs:
     uses: ./.github/workflows/dependabot-auto-merge.yml
     with:
       unconditional: true
+  pr-agent:
+    if: >
+      github.event_name == 'pull_request' && github.actor != 'dependabot[bot]'
+    needs:
+      - docker-lint-and-scan
+    uses: ./.github/workflows/pr-agent.yml
