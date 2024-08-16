@@ -33,12 +33,13 @@ jobs:
       dockerfile-paths: ./Dockerfile
   docker-build-and-push:
     if: >
-      github.event_name == 'workflow_dispatch' && inputs.workflow == 'build'
+      github.event_name == 'push'
+      || github.event_name == 'workflow_dispatch' && inputs.workflow == 'build'
     uses: dceoy/gh-actions-for-devops/.github/workflows/docker-build-and-push.yml@main
     with:
       registry: docker.io
       image-name: ${{ github.repository }}
-      platforms: linux/amd64
+      platforms: linux/amd64,linux/arm64
       context: .
       file: ./Dockerfile
       push: true
