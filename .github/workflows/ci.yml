@@ -1,5 +1,5 @@
 ---
-name: CI for this repository
+name: CI/CD
 on:
   push:
     branches:
@@ -34,7 +34,7 @@ jobs:
   docker-build-and-push:
     if: >
       github.event_name == 'push'
-      || github.event_name == 'workflow_dispatch' && inputs.workflow == 'build'
+      || (github.event_name == 'workflow_dispatch' && inputs.workflow == 'build')
     uses: dceoy/gh-actions-for-devops/.github/workflows/docker-build-and-push.yml@main
     with:
       registry: docker.io
