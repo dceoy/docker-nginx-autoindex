@@ -5,7 +5,7 @@ FROM alpine:${ALPINE_VERSION}
 ARG UID=101
 ARG GID=101
 
-SHELL ["/bin/ash", "-eo", "pipefail", "-c"]
+SHELL ["/bin/ash", "-euo", "pipefail", "-c"]
 
 RUN \
     addgroup -S -g "${GID}" nginx \
