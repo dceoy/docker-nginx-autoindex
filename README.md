@@ -26,5 +26,5 @@ $ docker container run --rm -p 80:80 -v ${PWD}:/var/lib/nginx/html:ro dceoy/ngin
 Run a web server with docker-compose
 
 ```sh
-$ docker compose -f /path/to/docker-nginx-autoindex/docker-compose.yml up
+$ docker compose -f /path/to/docker-nginx-autoindex/compose.yml up
 ```
