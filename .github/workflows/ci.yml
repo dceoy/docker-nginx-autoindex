@@ -18,7 +18,7 @@ on:
         required: true
         type: choice
         options:
-          - lint
+          - lint-and-scan
           - build
         description: Choose the workflow to run
         default: lint
@@ -27,7 +27,7 @@ jobs:
     if: >
       github.event_name == 'push'
       || (github.event_name == 'pull_request' && github.event.action != 'ready_for_review')
-      || (github.event_name == 'workflow_dispatch' && inputs.workflow == 'lint')
+      || (github.event_name == 'workflow_dispatch' && inputs.workflow == 'lint-and-scan')
     uses: dceoy/gh-actions-for-devops/.github/workflows/docker-lint-and-scan.yml@main
     with:
       dockerfile-paths: ./Dockerfile
@@ -38,6 +38,7 @@ jobs:
     uses: dceoy/gh-actions-for-devops/.github/workflows/docker-build-and-push.yml@main
     with:
       registry: docker.io
+      registry-user: ${{ github.actor }}
       image-name: ${{ github.repository }}
       platforms: linux/amd64,linux/arm64
       context: .
@@ -45,7 +46,6 @@ jobs:
       push: true
       image-artifact-name: docker-image
     secrets:
-      DOCKER_USER: ${{ github.actor }}
       DOCKER_TOKEN: ${{ secrets.DOCKER_TOKEN }}
   dependabot-auto-merge:
     if: >
