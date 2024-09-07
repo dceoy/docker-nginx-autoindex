@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1
 ARG ALPINE_VERSION=3
-FROM alpine:${ALPINE_VERSION}
+FROM public.ecr.aws/docker/library/alpine:${ALPINE_VERSION}
 
 ARG UID=101
 ARG GID=101
