@@ -55,11 +55,3 @@ jobs:
     uses: dceoy/gh-actions-for-devops/.github/workflows/dependabot-auto-merge.yml@main
     with:
       unconditional: false
-  pr-agent:
-    if: >
-      github.event_name == 'pull_request'
-      && github.actor != 'dependabot[bot]'
-      && github.event.action != 'synchronize'
-    uses: dceoy/gh-actions-for-devops/.github/workflows/pr-agent.yml@main
-    secrets:
-      GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
