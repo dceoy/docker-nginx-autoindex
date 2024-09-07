@@ -1,0 +1,18 @@
+---
+name: PR-agent
+on:
+  pull_request:
+    types:
+      - opened
+      - reopened
+      - ready_for_review
+  issue_comment:
+    types:
+      - created
+      - edited
+      - deleted
+jobs:
+  pr-agent:
+    uses: dceoy/gh-actions-for-devops/.github/workflows/pr-agent.yml@main
+    secrets:
+      GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
