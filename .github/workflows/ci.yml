@@ -11,7 +11,6 @@ on:
       - opened
       - synchronize
       - reopened
-      - ready_for_review
   workflow_dispatch:
     inputs:
       workflow:
@@ -21,12 +20,12 @@ on:
           - lint-and-scan
           - build
         description: Choose the workflow to run
-        default: lint
+        default: lint-and-scan
 jobs:
   docker-lint-and-scan:
     if: >
       github.event_name == 'push'
-      || (github.event_name == 'pull_request' && github.event.action != 'ready_for_review')
+      || github.event_name == 'pull_request'
       || (github.event_name == 'workflow_dispatch' && inputs.workflow == 'lint-and-scan')
     uses: dceoy/gh-actions-for-devops/.github/workflows/docker-lint-and-scan.yml@main
     with:
@@ -34,17 +33,22 @@ jobs:
   docker-build-and-push:
     if: >
       github.event_name == 'push'
-      || (github.event_name == 'workflow_dispatch' && inputs.workflow == 'build')
+      || (
+        github.event_name == 'workflow_dispatch'
+        && inputs.workflow == 'build'
+        && (! (failure() || cancelled()))
+      )
+    needs:
+      - docker-lint-and-scan
     uses: dceoy/gh-actions-for-devops/.github/workflows/docker-build-and-push.yml@main
     with:
       registry: docker.io
-      registry-user: ${{ github.actor }}
-      image-name: ${{ github.repository }}
+      registry-user: ${{ github.repository_owner }}
+      image-name: ${{ github.repository_owner }}/nginx-autoindex
       platforms: linux/amd64,linux/arm64
       context: .
       file: ./Dockerfile
       push: true
-      image-artifact-name: docker-image
     secrets:
       DOCKER_TOKEN: ${{ secrets.DOCKER_TOKEN }}
   dependabot-auto-merge:
@@ -54,4 +58,4 @@ jobs:
       - docker-lint-and-scan
     uses: dceoy/gh-actions-for-devops/.github/workflows/dependabot-auto-merge.yml@main
     with:
-      unconditional: false
+      unconditional: true

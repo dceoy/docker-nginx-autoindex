@@ -1,0 +1,11 @@
+---
+name: Deletion of merged branches on GitHub
+on:
+  pull_request:
+    branches:
+      - main
+    types:
+      - closed
+jobs:
+  delete-merged-branch:
+    uses: dceoy/gh-actions-for-devops/.github/workflows/github-merged-branch-deletion.yml@main
