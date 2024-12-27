@@ -28,8 +28,6 @@ jobs:
       || github.event_name == 'pull_request'
       || (github.event_name == 'workflow_dispatch' && inputs.workflow == 'lint-and-scan')
     uses: dceoy/gh-actions-for-devops/.github/workflows/docker-lint-and-scan.yml@main
-    with:
-      dockerfile-paths: ./Dockerfile
   docker-build-and-push:
     if: >
       github.event_name == 'push'
@@ -45,10 +43,12 @@ jobs:
       registry: docker.io
       registry-user: ${{ github.repository_owner }}
       image-name: ${{ github.repository_owner }}/nginx-autoindex
-      platforms: linux/amd64,linux/arm64
       context: .
       file: ./Dockerfile
+      platforms: linux/amd64,linux/arm64
       push: true
+      scan-before-build: false
+      scan-after-build: true
     secrets:
       DOCKER_TOKEN: ${{ secrets.DOCKER_TOKEN }}
   dependabot-auto-merge:
