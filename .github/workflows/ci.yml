@@ -29,7 +29,7 @@ jobs:
       || (github.event_name == 'workflow_dispatch' && inputs.workflow == 'lint-and-scan')
     permissions:
       contents: write
-    uses: dceoy/gh-actions-for-devops/.github/workflows/docker-lint-and-scan.yml@main
+    uses: dceoy/gha-for-devops/.github/workflows/docker-lint-and-scan.yml@main
   docker-build-and-push:
     if: >
       github.event_name == 'push'
@@ -44,7 +44,7 @@ jobs:
       contents: write
       packages: write
       id-token: write
-    uses: dceoy/gh-actions-for-devops/.github/workflows/docker-build-and-push.yml@main
+    uses: dceoy/gha-for-devops/.github/workflows/docker-build-and-push.yml@main
     with:
       registry: docker.io
       registry-user: ${{ github.repository_owner }}
@@ -68,6 +68,6 @@ jobs:
       actions: read
       checks: read
       statuses: read
-    uses: dceoy/gh-actions-for-devops/.github/workflows/dependabot-auto-merge.yml@main
+    uses: dceoy/gha-for-devops/.github/workflows/dependabot-auto-merge.yml@main
     with:
       unconditional: true
