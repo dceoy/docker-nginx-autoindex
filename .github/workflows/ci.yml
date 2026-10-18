@@ -76,8 +76,11 @@ jobs:
     if: github.ref == 'refs/heads/master' && (github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.workflow == 'lint-and-scan'))
     permissions:
       contents: write
-    uses: dceoy/gha-for-devops/.github/workflows/dependency-submission.yml@main  # zizmor: ignore[unpinned-uses]
+    uses: dceoy/gha-for-devops/.github/workflows/trivy-scan.yml@main  # zizmor: ignore[unpinned-uses]
     with:
       scan-type: filesystem
       scan-ref: .
       snapshot-correlator: source
+      trivy-scanners: vuln
+      trivy-exit-code: 0
+      submit-dependencies: true
