@@ -28,8 +28,12 @@ jobs:
       || github.event_name == 'pull_request'
       || (github.event_name == 'workflow_dispatch' && inputs.workflow == 'lint-and-scan')
     permissions:
-      contents: read
+      contents: write
     uses: dceoy/gha-for-devops/.github/workflows/docker-lint-and-scan.yml@main
+    with:
+      submit-dependencies: true
+      snapshot-correlator: source
+
   docker-build-and-push:
     if: >
       github.event_name == 'push'
@@ -72,15 +76,3 @@ jobs:
     uses: dceoy/gha-for-devops/.github/workflows/dependabot-auto-merge.yml@main
     with:
       unconditional: true
-  source-dependency-submission:
-    if: github.ref == 'refs/heads/master' && (github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.workflow == 'lint-and-scan'))
-    permissions:
-      contents: write
-    uses: dceoy/gha-for-devops/.github/workflows/trivy-scan.yml@main  # zizmor: ignore[unpinned-uses]
-    with:
-      scan-type: filesystem
-      scan-ref: .
-      snapshot-correlator: source
-      trivy-scanners: vuln
-      trivy-exit-code: 0
-      submit-dependencies: true
