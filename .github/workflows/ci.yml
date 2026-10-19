@@ -33,7 +33,6 @@ jobs:
     with:
       submit-dependencies: true
       snapshot-correlator: source
-
   docker-build-and-push:
     if: >
       github.event_name == 'push'
