@@ -8,6 +8,17 @@ Dockerfile for Nginx with autoindex
 Docker image
 ------------
 
+Builds on Docker Hardened Nginx 1.30 for Alpine 3.23. Authenticate to the free
+Docker Hardened Images registry before local builds:
+
+```sh
+docker login dhi.io
+```
+
+The runtime listens on container port 8080 under its built-in non-root user.
+Map host port 80 to container port 8080 if desired.
+
+
 Pull the image from [Docker Hub](https://hub.docker.com/r/dceoy/nginx-autoindex/)
 
 ```sh
@@ -20,7 +31,7 @@ Usage
 Run a web server to serve the current directory at `/` of Nginx
 
 ```sh
-$ docker container run --rm -p 80:80 -v ${PWD}:/var/lib/nginx/html:ro dceoy/nginx-autoindex
+$ docker container run --rm -p 80:8080 -v ${PWD}:/usr/share/nginx/html:ro dceoy/nginx-autoindex
 ```
 
 Run a web server with docker-compose
