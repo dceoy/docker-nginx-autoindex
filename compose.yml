@@ -8,11 +8,6 @@ services:
     image: dceoy/nginx-autoindex:latest
     network_mode: bridge
     ports:
-      - 80:80
+      - 80:8080
     volumes:
-      - ${PWD}:/var/lib/nginx/html:ro
-    entrypoint:
-      - /usr/sbin/nginx
-    command:
-      - -g
-      - daemon off;
+      - ${PWD}:/usr/share/nginx/html:ro
