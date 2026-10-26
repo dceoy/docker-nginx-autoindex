@@ -36,6 +36,7 @@ jobs:
   docker-build-and-push:
     if: >
       github.event_name == 'push'
+      || github.event_name == 'pull_request'
       || (
         github.event_name == 'workflow_dispatch'
         && inputs.workflow == 'build'
@@ -50,12 +51,13 @@ jobs:
     uses: dceoy/gha-for-devops/.github/workflows/docker-build-and-push.yml@main
     with:
       registry: docker.io
+      login-dhi: true
       registry-user: ${{ github.repository_owner }}
       image-name: ${{ github.repository_owner }}/nginx-autoindex
       context: .
       file: ./Dockerfile
-      platforms: linux/amd64,linux/arm64
-      push: true
+      platforms: ${{ github.event_name == 'pull_request' && 'linux/amd64' || 'linux/amd64,linux/arm64' }}
+      push: ${{ github.event_name != 'pull_request' }}
       submit-dependencies: true
       scan-before-build: false
       scan-after-build: true
