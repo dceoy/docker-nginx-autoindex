@@ -11,7 +11,7 @@ updates:
         patterns:
           - '*'
     cooldown:
-      default-days: 1
+      default-days: 7
   - package-ecosystem: docker
     directory: /
     schedule:
@@ -22,7 +22,7 @@ updates:
         patterns:
           - '*'
     cooldown:
-      default-days: 1
+      default-days: 7
   - package-ecosystem: docker-compose
     directory: /
     schedule:
@@ -33,4 +33,4 @@ updates:
         patterns:
           - '*'
     cooldown:
-      default-days: 1
+      default-days: 7
